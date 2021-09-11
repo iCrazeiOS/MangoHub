@@ -41,6 +41,17 @@ end)
 
 
 
+local killEveryone = gamePage.AddButton("Kill Everyone", function()
+    for i,v in pairs(game.Players:GetChildren()) do
+        if v ~= game.Players.LocalPlayer then
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+        end
+        wait(0.5)
+    end
+end)
+
+
+
 while wait(1) do
     if getgenv().speedEnabled == true then
         game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = getgenv().customSpeed
