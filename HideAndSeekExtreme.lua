@@ -6,26 +6,37 @@ getgenv().customSpeed = 50
 getgenv().customJump = 50
 
 local MainUI = UILibrary.Load("Hide and Seek Extreme Menu - by iCraze")
-local menuPage = MainUI.AddPage("Menu")
+local movementPage = MainUI.AddPage("Movement")
+local gamePage = MainUI.AddPage("Game")
 
-local customSpeedToggle = menuPage.AddToggle("Enable Custom Speed", false, function(Value)
+local customSpeedToggle = movementPage.AddToggle("Enable Custom Speed", false, function(Value)
     getgenv().speedEnabled = Value
 end)
 
-local customSpeedSlider = menuPage.AddSlider("Speed", {Min = 0, Max = 255, Def = 50}, function(Value)
+local customSpeedSlider = movementPage.AddSlider("Speed", {Min = 0, Max = 255, Def = 50}, function(Value)
     getgenv().customSpeed = Value
 end)
 
-local customJumpToggle = menuPage.AddToggle("Enable Custom Jump Power", false, function(Value)
+local customJumpToggle = movementPage.AddToggle("Enable Custom Jump Power", false, function(Value)
     getgenv().jumpEnabled = Value
 end)
 
-local customJumpSlider = menuPage.AddSlider("Jump Power", {Min = 0, Max = 255, Def = 50}, function(Value)
+local customJumpSlider = movementPage.AddSlider("Jump Power", {Min = 0, Max = 255, Def = 50}, function(Value)
     getgenv().customJump = Value
 end)
 
-local noRagdollToggle = menuPage.AddToggle("No Ragdoll", false, function(Value)
+local noRagdollToggle = movementPage.AddToggle("No Ragdoll", false, function(Value)
     getgenv().noRagdollEnabled = Value
+end)
+
+
+
+local getAllCoins = gamePage.AddButton("Collect All Coins", function()
+    for i,v in pairs(game.Workspace.GameObjects:GetChildren()) do
+        if v.name == "Credit" then
+            v.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+        end
+    end
 end)
 
 
