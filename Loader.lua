@@ -10,6 +10,9 @@ local supportedGames = {
     }, [3101667897] = {
         [1] = "Legends Of Speed",
         [2] = "LegendsOfSpeed"
+    }, [4545436299] = {
+        [1] = "Pet Clicks Simulator",
+        [2] = "PetClicksSimulator"
     }
 }
 
