@@ -25,10 +25,21 @@ local customJumpSlider = movementPage.AddSlider("Jump Power", {Min = 0, Max = 25
     getgenv().customJump = Value
 end)
 
-local makeX2Button = gamePage.AddButton("Finish Game", function()
+local makeX2Button = gamePage.AddButton("Finish Game (Can't use in first 30 seconds)", function()
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").tower.sections.finish.FinishGlow.CFrame
 end)
 
+local teleportMenu = movementPage.AddButton("Teleport to player", function()
+    local teleportUI = UILibrary.Load("Teleport to player")
+    local playersPage = teleportUI.AddPage("Players")
+    for i, v in pairs(game.Players:GetChildren()) do
+        if v ~= game.Players.LocalPlayer then
+            playersPage.AddButton(v.Name, function()
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+            end)
+        end
+    end
+end)
 
 
 while wait(1) do
