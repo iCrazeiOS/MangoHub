@@ -65,16 +65,17 @@ local killEveryone = gamePage.AddButton("Kill Everyone (Need to be IT)", functio
     end
 end)
 
-local disableGlueToggle = gamePage.AddToggle("Disable Glue", false, function(Value)
+local disableGlueToggle = gamePage.AddToggle("Disable Glue/Cameras", false, function(Value)
     getgenv().disableGlue = Value
 end)
 
 
 
 while wait(1) do
+
     if getgenv().disableGlue then
         for i, v in pairs(game.Workspace.GameObjects:GetChildren()) do
-            if v.name == "GlueServer" then
+            if v.name == "GlueServer" or v.name == "Camera1" or v.name == "Camera2" then
                 v:Destroy()
             end
         end
