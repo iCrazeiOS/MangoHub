@@ -2,6 +2,7 @@ local UILibrary = loadstring(game:HttpGet("https://pastebin.com/raw/V1ca2q9s"))(
 getgenv().speedEnabled = false
 getgenv().jumpEnabled = false
 getgenv().noRagdollEnabled = false
+getgenv().disableGlue = false
 getgenv().customSpeed = 50
 getgenv().customJump = 50
 
@@ -29,20 +30,34 @@ local noRagdollToggle = movementPage.AddToggle("No Ragdoll", false, function(Val
     getgenv().noRagdollEnabled = Value
 end)
 
-
-
-local getAllCoins = gamePage.AddButton("Collect All Coins", function()
-    for i,v in pairs(game.Workspace.GameObjects:GetChildren()) do
-        if v.name == "Credit" then
-            v.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+local teleportMenu = movementPage.AddButton("Teleport to player", function()
+    local teleportUI = UILibrary.Load("Teleport to player")
+    local playersPage = teleportUI.AddPage("Players")
+    for i, v in pairs(game.Players:GetChildren()) do
+        if v.PlayerData.It.Value then
+            playersPage.AddButton(v.Name.." (IT)", function()
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+            end)
+        elseif v ~= game.Players.LocalPlayer then
+            playersPage.AddButton(v.Name, function()
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+            end)
         end
     end
 end)
 
 
 
+local getAllCoins = gamePage.AddButton("Collect All Coins", function()
+    for i, v in pairs(game.Workspace.GameObjects:GetChildren()) do
+        if v.name == "Credit" then
+            firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v, 0)
+        end
+    end
+end)
+
 local killEveryone = gamePage.AddButton("Kill Everyone (Need to be IT)", function()
-    for i,v in pairs(game.Players:GetChildren()) do
+    for i, v in pairs(game.Players:GetChildren()) do
         if v ~= game.Players.LocalPlayer then
             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
         end
@@ -50,9 +65,21 @@ local killEveryone = gamePage.AddButton("Kill Everyone (Need to be IT)", functio
     end
 end)
 
+local disableGlueToggle = gamePage.AddToggle("Disable Glue", false, function(Value)
+    getgenv().disableGlue = Value
+end)
+
 
 
 while wait(1) do
+    if getgenv().disableGlue then
+        for i, v in pairs(game.Workspace.GameObjects:GetChildren()) do
+            if v.name == "GlueServer" then
+                v:Destroy()
+            end
+        end
+    end
+
     if getgenv().speedEnabled == true then
         game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = getgenv().customSpeed
     else game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
