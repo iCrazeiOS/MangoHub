@@ -72,7 +72,6 @@ end)
 
 
 while wait(1) do
-
     if getgenv().disableGlue then
         for i, v in pairs(game.Workspace.GameObjects:GetChildren()) do
             if v.name == "GlueServer" or v.name == "Camera1" or v.name == "Camera2" then
