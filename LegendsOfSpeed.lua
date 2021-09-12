@@ -1,3 +1,4 @@
+local UID = game:GetService("UserInputService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UILibrary = loadstring(game:HttpGet("https://pastebin.com/raw/V1ca2q9s"))()
 getgenv().xpEnabled = false
@@ -90,11 +91,14 @@ end)
 
 
 function getGems(area)
-    for i = 1, 10000, 1 do
-        if getgenv().gemsEnabled then
-            ReplicatedStorage.rEvents.orbEvent:FireServer(unpack({[1] = "collectOrb", [2] = "Gem", [3] = area}))
-        end
-        wait(0.05)
+    for x=1, 100, 1 do
+        spawn(function()
+            while wait(0.05) do
+                if getgenv().gemsEnabled then
+                    ReplicatedStorage.rEvents.orbEvent:FireServer(unpack({[1] = "collectOrb", [2] = "Gem", [3] = area}))
+                end
+            end
+        end)
     end
 end
 
@@ -103,10 +107,14 @@ function collectOrb(area)
     if area == "City" then orb = "Orange Orb"
     end
 
-    while wait(0.05) do
-        if getgenv().xpEnabled then
-            ReplicatedStorage.rEvents.orbEvent:FireServer(unpack({[1] = "collectOrb", [2] = orb, [3] = area}))
-        end
+    for x=1, 100, 1 do
+        spawn(function()
+            while wait(0.05) do
+                if getgenv().xpEnabled then
+                    ReplicatedStorage.rEvents.orbEvent:FireServer(unpack({[1] = "collectOrb", [2] = orb, [3] = area}))
+                end
+            end
+        end)
     end
 end
 
@@ -120,9 +128,10 @@ function rebirth()
     ReplicatedStorage.rEvents.rebirthEvent:FireServer(unpack({"rebirthRequest"}))
 end
 
-
-while wait(1) do
-    if getgenv().autoRebirthEnabled then
-        rebirth()
+spawn(function()
+    while wait(1) do
+        if getgenv().autoRebirthEnabled then
+            rebirth()
+        end
     end
-end
+end)
