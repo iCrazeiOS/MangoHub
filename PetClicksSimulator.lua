@@ -37,13 +37,6 @@ end)
 spawn(function()
     while wait(0.025) do
         if getgenv().autoClickEnabled then workspace.Events.AddClick:FireServer() end
-    end
-end)
-
-
-
-spawn(function()
-    while wait(1) do
         if getgenv().speedEnabled == true then
             game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = getgenv().customSpeed
         else game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
