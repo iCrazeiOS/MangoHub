@@ -3,5 +3,5 @@ Some Roblox game scripts I've made - You need an executor such as Synapse or KRN
 
 # Inject Loader
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/iCrazeiOS/RobloxScripts/main/Loader.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/iCrazeiOS/MangoHub/main/Loader.lua"))()
 ```
