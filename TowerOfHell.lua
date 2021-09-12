@@ -25,7 +25,7 @@ local customJumpSlider = movementPage.AddSlider("Jump Power", {Min = 0, Max = 25
     getgenv().customJump = Value
 end)
 
-local makeX2Button = gamePage.AddButton("Finish Game (Can't use in first 30 seconds)", function()
+local makeX2Button = gamePage.AddButton("Finish Game", function()
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").tower.sections.finish.FinishGlow.CFrame
 end)
 
