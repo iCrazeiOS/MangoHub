@@ -30,13 +30,13 @@ end)
 
 local autoClickerToggle = autoPage.AddToggle("Auto Clicker", false, function(Value)
     getgenv().autoClickEnabled = Value
-end)
-
-
-
-spawn(function()
-    while wait(0.025) do
-        if getgenv().autoClickEnabled then workspace.Events.AddClick:FireServer() end
+    for x = 1, 100, 1 do
+        spawn(function()
+            while wait(0.25) do
+                if getgenv().autoClickEnabled then workspace.Events.AddClick:FireServer()
+                else break end
+            end
+        end)
     end
 end)
 
