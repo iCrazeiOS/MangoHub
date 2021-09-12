@@ -17,7 +17,7 @@ local supportedGames = {
 }
 
 if supportedGames[game.placeId] then
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/iCrazeiOS/RobloxScripts/main/"..supportedGames[game.placeId][2]..".lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/iCrazeiOS/MangoHub/main/"..supportedGames[game.placeId][2]..".lua"))()
 else
     local MainUI = UILibrary.Load("MangoHub - by iCraze")
     local infoPage = MainUI.AddPage("Info")
