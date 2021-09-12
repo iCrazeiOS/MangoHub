@@ -1,4 +1,4 @@
-local UILibrary = loadstring(game:HttpGet("https://pastebin.com/raw/V1ca2q9s"))()
+if not UILibrary then getgenv().UILibrary = loadstring(game:HttpGet("https://pastebin.com/raw/V1ca2q9s"))() end
 getgenv().speedEnabled = false
 getgenv().jumpEnabled = false
 getgenv().customSpeed = 50

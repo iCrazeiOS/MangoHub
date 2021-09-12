@@ -1,6 +1,4 @@
-print(UILibrary)
 if not UILibrary then getgenv().UILibrary = loadstring(game:HttpGet("https://pastebin.com/raw/V1ca2q9s"))() end
-print(UILibrary)
 
 local UID = game:GetService("UserInputService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
