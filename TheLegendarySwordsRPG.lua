@@ -3,10 +3,10 @@ getgenv().speedEnabled = false
 getgenv().jumpEnabled = false
 getgenv().customSpeed = 50
 getgenv().customJump = 50
-getgenv().autoClickEnabled = false
+getgenv().farmEnabled = false
 
 
-local MainUI = UILibrary.Load("Pet Clicks Simulator Menu - by iCraze")
+local MainUI = UILibrary.Load("The Legendary Swords RPG Menu - by iCraze")
 local movementPage = MainUI.AddPage("Movement")
 local autoPage = MainUI.AddPage("Auto")
 
@@ -26,18 +26,32 @@ local customJumpSlider = movementPage.AddSlider("Jump Power", {Min = 0, Max = 25
 	getgenv().customJump = Value
 end)
 
-
-
-local autoClickerToggle = autoPage.AddToggle("Auto Clicker", false, function(Value)
-	getgenv().autoClickEnabled = Value
-	for x = 1, 100, 1 do
-		spawn(function()
-			while wait(0.25) do
-				if getgenv().autoClickEnabled then workspace.Events.AddClick:FireServer()
-				else break end
-			end
-		end)
+movementPage.AddButton("Teleport to player", function()
+	local teleportUI = UILibrary.Load("Teleport to player")
+	local playersPage = teleportUI.AddPage("Players")
+	for i, v in pairs(game.Players:GetChildren()) do
+		if v ~= game.Players.LocalPlayer then
+			playersPage.AddButton(v.Name, function()
+				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+			end)
+		end
 	end
+end)
+
+
+
+local moneyLoopToggle = autoPage.AddToggle("50M Gold every 10 seconds (loop)", false, function(Value)
+	getgenv().farmEnabled = Value
+	spawn(function()
+		while true do
+			if not getgenv().farmEnabled then break end
+			local event = game:GetService("Players").LocalPlayer.RemoteFunctions.SwordShopSystem
+			event:FireServer("Buy", 0, "Frostbrand")
+			wait(5)
+			event:FireServer("Sell", 100000000, "Frostbrand")
+			wait(5)
+		end
+	end)
 end)
 
 
