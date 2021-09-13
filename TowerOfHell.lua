@@ -1,6 +1,7 @@
 if not UILibrary then getgenv().UILibrary = loadstring(game:HttpGet("https://pastebin.com/raw/V1ca2q9s"))() end
 getgenv().speedEnabled = false
 getgenv().jumpEnabled = false
+getgenv().flightEnabled = false
 getgenv().customSpeed = 50
 getgenv().customJump = 50
 
@@ -25,6 +26,10 @@ local customJumpSlider = movementPage.AddSlider("Jump Power", {Min = 0, Max = 25
 	getgenv().customJump = Value
 end)
 
+local flightToggle = movementPage.AddToggle("Flight", false, function(Value)
+	getgenv().flightEnabled = Value
+end)
+
 local makeX2Button = gamePage.AddButton("Finish Game", function()
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").tower.sections.finish.FinishGlow.CFrame
 end)
@@ -41,6 +46,18 @@ local teleportMenu = movementPage.AddButton("Teleport to player", function()
 	end
 end)
 
+function onJumpRequest()
+	if getgenv().flightEnabled then
+		local oldJP = game.Players.LocalPlayer.Character.Humanoid.JumpPower
+		game.Players.LocalPlayer.Character.Humanoid.JumpPower = 30
+		wait(0.05)
+		game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+		wait(0.05)
+		game.Players.LocalPlayer.Character.Humanoid.JumpPower = oldJP
+	end
+end
+
+game:GetService("UserInputService").JumpRequest:connect(onJumpRequest)
 
 while wait(1) do
 	if getgenv().speedEnabled then
@@ -48,8 +65,8 @@ while wait(1) do
 	else game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
 	end
 
-	if getgenv().jumpEnabled then
+	if getgenv().jumpEnabled and not getgenv().flightEnabled then
 		game.Players.LocalPlayer.Character.Humanoid.JumpPower = getgenv().customJump
-	else game.Players.LocalPlayer.Character.Humanoid.JumpPower = 57
+	elseif not getgenv().flightEnabled then game.Players.LocalPlayer.Character.Humanoid.JumpPower = 57
 	end
 end

@@ -2,6 +2,7 @@ if not UILibrary then getgenv().UILibrary = loadstring(game:HttpGet("https://pas
 getgenv().speedEnabled = false
 getgenv().jumpEnabled = false
 getgenv().noRagdollEnabled = false
+getgenv().flightEnabled = false
 getgenv().disableGlue = false
 getgenv().customSpeed = 50
 getgenv().customJump = 50
@@ -28,6 +29,10 @@ end)
 
 local noRagdollToggle = movementPage.AddToggle("No Ragdoll", false, function(Value)
 	getgenv().noRagdollEnabled = Value
+end)
+
+local flightToggle = movementPage.AddToggle("Flight", false, function(Value)
+	getgenv().flightEnabled = Value
 end)
 
 local teleportMenu = movementPage.AddButton("Teleport to player", function()
@@ -69,6 +74,19 @@ local disableGlueToggle = gamePage.AddToggle("Disable Glue/Cameras", false, func
 	getgenv().disableGlue = Value
 end)
 
+function onJumpRequest()
+	if getgenv().flightEnabled then
+		local oldJP = game.Players.LocalPlayer.Character.Humanoid.JumpPower
+		game.Players.LocalPlayer.Character.Humanoid.JumpPower = 30
+		wait(0.05)
+		game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+		wait(0.05)
+		game.Players.LocalPlayer.Character.Humanoid.JumpPower = oldJP
+	end
+end
+
+game:GetService("UserInputService").JumpRequest:connect(onJumpRequest)
+
 
 
 while wait(1) do
@@ -85,9 +103,9 @@ while wait(1) do
 	else game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
 	end
 
-	if getgenv().jumpEnabled then
+	if getgenv().jumpEnabled and not getgenv().flightEnabled then
 		game.Players.LocalPlayer.Character.Humanoid.JumpPower = getgenv().customJump
-	else game.Players.LocalPlayer.Character.Humanoid.JumpPower = 57
+	elseif not getgenv().flightEnabled then game.Players.LocalPlayer.Character.Humanoid.JumpPower = 57
 	end
 
 	if getgenv().noRagdollEnabled then
