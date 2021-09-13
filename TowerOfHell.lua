@@ -1,6 +1,7 @@
 if not UILibrary then getgenv().UILibrary = loadstring(game:HttpGet("https://pastebin.com/raw/V1ca2q9s"))() end
 getgenv().speedEnabled = false
 getgenv().jumpEnabled = false
+getgenv().godModeEnabled = false
 getgenv().customSpeed = 50
 getgenv().customJump = 50
 
@@ -27,6 +28,16 @@ end)
 
 local makeX2Button = gamePage.AddButton("Finish Game", function()
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").tower.sections.finish.FinishGlow.CFrame
+end)
+
+local godModeToggle = gamePage.AddToggle("Godmode", false, function(Value)
+	getgenv().godModeEnabled = Value
+	spawn(function()
+		while wait do
+			if not getgenv().godModeEnabled then break end
+			game.Players.LocalPlayer.Character.KillScript:Destroy() 
+		end
+	end)
 end)
 
 local teleportMenu = movementPage.AddButton("Teleport to player", function()
