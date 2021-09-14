@@ -31,11 +31,13 @@ else
 	local MainUI = UILibrary.Load("MangoHub - by iCraze")
 	local infoPage = MainUI.AddPage("Info")
 	local movementPage = MainUI.AddPage("Movement")
+	local visualsPage= MainUI.AddPage("Visual")
 	infoPage.AddLabel("\n\n\n\n\n\n\n\n\nMangoHub does not have any\ngame-specific modules for this game...\n\nA basic menu will be loaded.\nIt may or may not work with this game.")
 	
 	getgenv().speedEnabled = false
 	getgenv().jumpEnabled = false
 	getgenv().flightEnabled = false
+	getgenv().playerESP = false
 	getgenv().customSpeed = 50
 	getgenv().customJump = 50
 
@@ -69,6 +71,36 @@ else
 				end)
 			end
 		end
+	end)
+
+	local playerESPToggle = visualsPage.AddToggle("Player ESP", false, function(Value)
+		getgenv().playerESP = Value
+		spawn(function()
+			while wait() do
+				for i, v in pairs(game.Players:GetPlayers()) do
+					if v.Name ~= game.Players.LocalPlayer.Name then
+						if v.Character then
+							for i2, v2 in pairs(v.Character:GetChildren()) do
+								if v2.ClassName == "Part" or v2.ClassName == "MeshPart" then
+									if not v2:FindFirstChild("BoxHandleAdornment") then
+										box = Instance.new("BoxHandleAdornment")
+										box.Parent = v2
+										box.Adornee = v2
+										box.Size = v2.Size
+										box.ZIndex = 0
+										box.Transparency = 0.5
+										box.Visible = true
+										box.AlwaysOnTop = true
+										wait()
+									elseif not getgenv().playerESP then v2:FindFirstChild("BoxHandleAdornment"):Destroy() end
+								end
+							end
+						end
+					end
+				end
+			end
+			
+		end)
 	end)
 
 	function onJumpRequest()

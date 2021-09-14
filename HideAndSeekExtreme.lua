@@ -4,12 +4,15 @@ getgenv().jumpEnabled = false
 getgenv().noRagdollEnabled = false
 getgenv().flightEnabled = false
 getgenv().disableGlue = false
+getgenv().playerESP = false
+getgenv().coinESP = false
 getgenv().customSpeed = 50
 getgenv().customJump = 50
 
 local MainUI = UILibrary.Load("Hide and Seek Extreme Menu - by iCraze")
 local movementPage = MainUI.AddPage("Movement")
 local gamePage = MainUI.AddPage("Game")
+local visualsPage = MainUI.AddPage("Visuals")
 
 local customSpeedToggle = movementPage.AddToggle("Enable Custom Speed", false, function(Value)
 	getgenv().speedEnabled = Value
@@ -72,6 +75,59 @@ end)
 
 local disableGlueToggle = gamePage.AddToggle("Disable Glue/Cameras", false, function(Value)
 	getgenv().disableGlue = Value
+end)
+
+local playerESPToggle = visualsPage.AddToggle("Player ESP", false, function(Value)
+	getgenv().playerESP = Value
+	spawn(function()
+		while wait() do
+			for i, v in pairs(game.Players:GetPlayers()) do
+				if v.Name ~= game.Players.LocalPlayer.Name then
+					if v.Character then
+						for i2, v2 in pairs(v.Character:GetChildren()) do
+							if v2.ClassName == "Part" or v2.ClassName == "MeshPart" then
+								if not v2:FindFirstChild("BoxHandleAdornment") then
+									box = Instance.new("BoxHandleAdornment")
+									box.Parent = v2
+									box.Adornee = v2
+									box.Size = v2.Size
+									box.ZIndex = 0
+									box.Transparency = 0.5
+									box.Visible = true
+									box.AlwaysOnTop = true
+									wait()
+								elseif not getgenv().playerESP then v2:FindFirstChild("BoxHandleAdornment"):Destroy() end
+							end
+						end
+					end
+				end
+			end
+		end
+	end)
+end)
+
+local coinESPToggle = visualsPage.AddToggle("Coin ESP", false, function(Value)
+	getgenv().coinESP = Value
+	spawn(function()
+		while wait() do
+			if not getgenv().coinESP then break end
+			for i, v in pairs(game.Workspace.GameObjects:GetChildren()) do
+				if v.name == "Credit" then
+					if not v:FindFirstChild("BoxHandleAdornment") then
+						box = Instance.new("BoxHandleAdornment")
+						box.Parent = v
+						box.Adornee = v
+						box.Size = v.Size
+						box.ZIndex = 0
+						box.Transparency = 0.5
+						box.Visible = true
+						box.AlwaysOnTop = true
+						wait()
+					elseif not getgenv().playerESP then v:FindFirstChild("BoxHandleAdornment"):Destroy() end
+				end
+			end
+		end
+	end)
 end)
 
 function onJumpRequest()
