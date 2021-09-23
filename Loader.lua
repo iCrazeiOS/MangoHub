@@ -22,6 +22,9 @@ local supportedGames = {
 	}, [60654525] = {
 		[1] = "The Legendary Swords RPG",
 		[2] = "TheLegendarySwordsRPG"
+	}, [5598577415] = {
+		[1] = "Frog Simulator",
+		[2] = "FrogSimulator"
 	}
 }
 
