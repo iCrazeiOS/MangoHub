@@ -57,15 +57,17 @@ end)
 
 
 spawn(function()
+    getgenv().originalSpeed = game.Players.LocalPlayer.Character.Humanoid.WalkSpeed
+    getgenv().originalJumpPower = game.Players.LocalPlayer.Character.Humanoid.JumpPower
     while wait(0.1) do
         if getgenv().speedEnabled then
         	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = getgenv().customSpeed
-        else game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+        else game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = getgenv().originalSpeed
         end
         
         if getgenv().jumpEnabled and not getgenv().flightEnabled then
         	game.Players.LocalPlayer.Character.Humanoid.JumpPower = getgenv().customJump
-        elseif not getgenv().flightEnabled then game.Players.LocalPlayer.Character.Humanoid.JumpPower = 57
+        elseif not getgenv().flightEnabled then game.Players.LocalPlayer.Character.Humanoid.JumpPower = getgenv().originalJumpPower
         end
     end
 end)
@@ -79,7 +81,9 @@ function onJumpRequest()
 		wait(0.05)
 		game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
 		wait(0.05)
-		game.Players.LocalPlayer.Character.Humanoid.JumpPower = oldJP
+		if getgenv().jumpEnabled then
+    		game.Players.LocalPlayer.Character.Humanoid.JumpPower = oldJP
+    	else game.Players.LocalPlayer.Character.Humanoid.JumpPower = getgenv().originalJumpPower end
 	end
 end
 
