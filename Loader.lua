@@ -25,6 +25,9 @@ local supportedGames = {
 	}, [5598577415] = {
 		[1] = "Frog Simulator",
 		[2] = "FrogSimulator"
+	}, [2533391464] = {
+	    [1] = "Snowman Simulator",
+	    [2] = "SnowmanSimulator"
 	}
 }
 
