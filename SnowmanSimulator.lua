@@ -4,6 +4,7 @@ getgenv().autoCollectCanes = false
 getgenv().autoAddSnow = false
 getgenv().autoRebirth = false
 getgenv().autoPresents = false
+getgenv().completeAutoFarm = false
 
 local MainUI = UILibrary.Load("Snowman Simulator Menu - by iCraze")
 local movementPage = MainUI.AddPage("Movement")
