@@ -6,6 +6,23 @@ getgenv().customSpeed = 50
 getgenv().customJump = 50
 
 
+
+-- anticheat bypass from v3rmillion
+local mt = getrawmetatable(game)
+local old = mt.__namecall
+setreadonly(mt, false)
+mt.__namecall = newcclosure(function(self, ...)
+	local args = {...}
+	local method = getnamecallmethod()
+	if method == "Kick" then return end
+	return old(self, ...)
+end)
+setreadonly(mt, true)
+game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript2:Destroy()
+game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript:Destroy()
+
+
+
 local MainUI = UILibrary.Load("Tower of Hell Menu - by iCraze")
 local movementPage = MainUI.AddPage("Movement")
 local gamePage = MainUI.AddPage("Game")
@@ -27,7 +44,7 @@ local customJumpSlider = movementPage.AddSlider("Jump Power", {Min = 0, Max = 25
 end)
 
 local makeX2Button = gamePage.AddButton("Finish Game", function()
-	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").tower.sections.finish.FinishGlow.CFrame
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").tower.finishes:GetChildren()[1].CFrame
 end)
 
 local godModeToggle = gamePage.AddToggle("Godmode", false, function(Value)
@@ -38,6 +55,13 @@ local godModeToggle = gamePage.AddToggle("Godmode", false, function(Value)
 			game.Players.LocalPlayer.Character.KillScript:Destroy() 
 		end
 	end)
+end)
+
+local removeKillZonesButton = gamePage.AddButton("Delete kill zones", function()
+	-- from v3rmillion
+	for i,v in pairs(game:GetService("Workspace").tower:GetDescendants()) do
+		if v:IsA("BoolValue") and v.Name == "kills" then v.Parent:Destroy() end
+	end
 end)
 
 local teleportMenu = movementPage.AddButton("Teleport to player", function()
