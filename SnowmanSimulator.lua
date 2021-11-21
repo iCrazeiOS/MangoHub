@@ -50,7 +50,7 @@ local autoAddToSnowmanToggle = autoPage.AddToggle("Auto Add To Snowball", false,
     	spawn(function()
             while true do
                 if not getgenv().autoAddSnow then break end
-                game:GetService("ReplicatedStorage").ThisGame.Calls.snowballController:FireServer("addToSnowman")wait(1)
+                game:GetService("ReplicatedStorage").ThisGame.Calls.snowballController:FireServer("addToSnowman")
                 wait(1)
             end
     	end)
