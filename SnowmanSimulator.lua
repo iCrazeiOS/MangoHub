@@ -44,26 +44,49 @@ movementPage.AddButton("Teleport to player", function()
 end)
 
 function getLocalSnowman()
-     for i, v in pairs(game:GetService("Workspace").snowmanBases:GetChildren()) do
-        if v.player.Value == game.Players.LocalPlayer then
-            return v
-        end
-     end
+	for i, v in pairs(game:GetService("Workspace").snowmanBases:GetChildren()) do
+		if v.player.Value == game.Players.LocalPlayer then
+			return v
+		end
+	end
 end
 
 function rebirth()
-    snowman = getLocalSnowman()
-    if snowman.rebirthActive.Value then
-        game:GetService("ReplicatedStorage").ThisGame.Calls.snowmanEvent:FireServer('acceptRebirth', snowman, true)
-    end
+	snowman = getLocalSnowman()
+	if snowman.rebirthActive.Value then
+		game:GetService("ReplicatedStorage").ThisGame.Calls.snowmanEvent:FireServer('acceptRebirth', snowman, true)
+	end
 end
+
+local completeFarmToggle = autoPage.AddToggle("Complete Auto Farm", false, function(Value)
+	getgenv().completeAutoFarm = Value
+	if Value then
+		spawn(function()
+			while getgen().completeAutoFarm do
+				game:GetService("ReplicatedStorage").ThisGame.Calls.snowballControllerFunc:InvokeServer("startRoll")
+				while not game:GetService("Players").LocalPlayer.info.snowmanBallSize.Value >= 8 + 12 * math.clamp(game:GetService("Players").LocalPlayer.localData.collecting.Value / 200, 0, 1) do
+					for i=1, 100, 1 do
+						game:GetService("ReplicatedStorage").ThisGame.Calls.collectSnow:FireServer()
+						game:GetService("RunService").Heartbeat:wait()
+					end
+				end
+				
+				game:GetService("ReplicatedStorage").ThisGame.Calls.snowballControllerFunc:InvokeServer("stopRoll")
+				if game:GetService("Players").LocalPlayer.localData.snowballs.Value == game:GetService("Players").LocalPlayer.localData.sackStorage.Value then game:GetService("ReplicatedStorage").ThisGame.Calls.snowballController:FireServer("addToSnowman") end
+				wait(0.1)
+				rebirth()
+				wait(0.1)
+			end
+		end)
+	end
+end)
 
 local autoAddToSnowmanToggle = autoPage.AddToggle("Auto Add To Snowman", false, function(Value)
 	getgenv().autoAddSnow = Value
 	if Value then
 		spawn(function()
 			while getgenv().autoAddSnow do
-			    if not getLocalSnowman().rebirthActive.Value then game:GetService("ReplicatedStorage").ThisGame.Calls.snowballController:FireServer("addToSnowman") end
+				if not getLocalSnowman().rebirthActive.Value then game:GetService("ReplicatedStorage").ThisGame.Calls.snowballController:FireServer("addToSnowman") end
 				wait(1)
 			end
 		end)
@@ -118,15 +141,15 @@ local openAllPresents = autoPage.AddToggle("Open All Presents", false, function(
 			while getgenv().autoPresents do
 				wait(0.5)
 				for i, v in pairs(game:GetService("Workspace").giftSpawns:GetDescendants()) do
-                    if v:IsA("ProximityPrompt") then
-                        if not getgenv().autoPresents then break end
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Parent.WorldCFrame
-                        wait(0.2)
-                        fireproximityprompt(v, 10)
-                        wait(0.1)
-                        while v.Parent.Parent:FindFirstChild("unwrapProgressBar") do wait() end
-                    end
-                end
+					if v:IsA("ProximityPrompt") then
+						if not getgenv().autoPresents then break end
+						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Parent.WorldCFrame
+						wait(0.2)
+						fireproximityprompt(v, 10)
+						wait(0.1)
+						while v.Parent.Parent:FindFirstChild("unwrapProgressBar") do wait() end
+					end
+				end
 			end
 		end)
 	end
