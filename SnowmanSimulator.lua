@@ -63,14 +63,14 @@ local completeFarmToggle = autoPage.AddToggle("Complete Auto Farm", false, funct
 	getgenv().completeAutoFarm = Value
 	if Value then
 		spawn(function()
-			while getgen().completeAutoFarm do
+			while getgenv().completeAutoFarm do
 				game:GetService("ReplicatedStorage").ThisGame.Calls.snowballControllerFunc:InvokeServer("startRoll")
-				while not game:GetService("Players").LocalPlayer.info.snowmanBallSize.Value >= 8 + 12 * math.clamp(game:GetService("Players").LocalPlayer.localData.collecting.Value / 200, 0, 1) do
+				repeat
 					for i=1, 100, 1 do
 						game:GetService("ReplicatedStorage").ThisGame.Calls.collectSnow:FireServer()
 						game:GetService("RunService").Heartbeat:wait()
 					end
-				end
+				until game:GetService("Players").LocalPlayer.info.snowmanBallSize.Value >= 8 + 12 * math.clamp(game:GetService("Players").LocalPlayer.localData.collecting.Value / 200, 0, 1)
 				
 				game:GetService("ReplicatedStorage").ThisGame.Calls.snowballControllerFunc:InvokeServer("stopRoll")
 				if game:GetService("Players").LocalPlayer.localData.snowballs.Value == game:GetService("Players").LocalPlayer.localData.sackStorage.Value then game:GetService("ReplicatedStorage").ThisGame.Calls.snowballController:FireServer("addToSnowman") end
