@@ -48,97 +48,97 @@ end)
 local autoAddToSnowmanToggle = autoPage.AddToggle("Auto Add To Snowman", false, function(Value)
 	getgenv().autoAddSnow = Value
 	if Value then
-    	spawn(function()
-            while getgenv().autoAddSnow do
-                game:GetService("ReplicatedStorage").ThisGame.Calls.snowballController:FireServer("addToSnowman")
-                wait(1)
-            end
-    	end)
-    end
+		spawn(function()
+			while getgenv().autoAddSnow do
+				game:GetService("ReplicatedStorage").ThisGame.Calls.snowballController:FireServer("addToSnowman")
+				wait(1)
+			end
+		end)
+	end
 end)
 
 local autoRebirthToggle = autoPage.AddToggle("Auto Rebirth", false, function(Value)
 	getgenv().autoRebirth = Value
 	if Value then
-    	spawn(function()
-            while getgenv().autoRebirth do
-                game:GetService("ReplicatedStorage").ThisGame.Calls.snowmanEvent:FireServer("acceptRebirth", workspace.snowmanBases.LandPlot, true)
-                wait(1)
-            end
-    	end)
-    end
+		spawn(function()
+			while getgenv().autoRebirth do
+				game:GetService("ReplicatedStorage").ThisGame.Calls.snowmanEvent:FireServer("acceptRebirth", workspace.snowmanBases.LandPlot, true)
+				wait(1)
+			end
+		end)
+	end
 end)
 
 local autoCanesToggle = autoPage.AddToggle("Auto Sell Canes", false, function(Value)
 	getgenv().autoSellCanes = Value
 	if Value then
-    	spawn(function()
-            while getgenv().autoSellCanes do
-                game:GetService("ReplicatedStorage").ThisGame.Calls.candycaneSell:FireServer("sellCandycanes", 1, workspace.sellSpots.redA.Nutcracker)
-                game:GetService("ReplicatedStorage").ThisGame.Calls.candycaneSell:FireServer("sellCandycanes", 2, workspace.sellSpots.greenA.Nutcracker)
-                game:GetService("ReplicatedStorage").ThisGame.Calls.candycaneSell:FireServer("sellCandycanes", 3, workspace.sellSpots.goldA.Nutcracker)
-                wait(1)
-            end
-    	end)
-    end
+		spawn(function()
+			while getgenv().autoSellCanes do
+				game:GetService("ReplicatedStorage").ThisGame.Calls.candycaneSell:FireServer("sellCandycanes", 1, workspace.sellSpots.redA.Nutcracker)
+				game:GetService("ReplicatedStorage").ThisGame.Calls.candycaneSell:FireServer("sellCandycanes", 2, workspace.sellSpots.greenA.Nutcracker)
+				game:GetService("ReplicatedStorage").ThisGame.Calls.candycaneSell:FireServer("sellCandycanes", 3, workspace.sellSpots.goldA.Nutcracker)
+				wait(1)
+			end
+		end)
+	end
 end)
 
 local getAllCanes = autoPage.AddToggle("Collect All Canes", false, function(Value)
-    getgenv().autoCollectCanes = Value
+	getgenv().autoCollectCanes = Value
 	if Value then
-    	spawn(function()
-            while getgenv().autoCollectCanes do
-                for i, v in pairs(game:GetService("Workspace").gameCandyCanes:GetChildren()) do
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v:GetChildren()[1].CFrame
-                    wait(0.25)
-                end
-                wait(0.1)
-            end
-    	end)
-    end
+		spawn(function()
+			while getgenv().autoCollectCanes do
+				for i, v in pairs(game:GetService("Workspace").gameCandyCanes:GetChildren()) do
+					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v:GetChildren()[1].CFrame
+					wait(0.25)
+				end
+				wait(0.1)
+			end
+		end)
+	end
 end)
 
 local openAllPresents = autoPage.AddToggle("Open All Presents", false, function(Value)
-    getgenv().autoPresents = Value
+	getgenv().autoPresents = Value
 	if Value then
-    	spawn(function()
-            while getgenv().autoPresents do
-                wait(0.5)
-                for i, v in pairs(game:GetService("Workspace").giftSpawns:GetChildren()) do
-                    if not getgenv().autoPresents then break end
-                    for i2, v2 in pairs(v:GetChildren()) do
-                        if v2.Name == "hitbox" then
-                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v2.CFrame
-                            wait(0.2)
-                            keypress(0x45)
-                            wait()
-                            keyrelease(0x45)
-                            wait(4)
-                        end
-                    end
-                    wait(0.1)
-                end
-            end
-    	end)
-    end
+		spawn(function()
+			while getgenv().autoPresents do
+				wait(0.5)
+				for i, v in pairs(game:GetService("Workspace").giftSpawns:GetChildren()) do
+					if not getgenv().autoPresents then break end
+					for i2, v2 in pairs(v:GetChildren()) do
+						if v2.Name == "hitbox" then
+							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v2.CFrame
+							wait(0.2)
+							keypress(0x45)
+							wait()
+							keyrelease(0x45)
+							wait(4)
+						end
+					end
+					wait(0.1)
+				end
+			end
+		end)
+	end
 end)
 
 
 
 spawn(function()
-    getgenv().originalSpeed = game.Players.LocalPlayer.Character.Humanoid.WalkSpeed
-    getgenv().originalJumpPower = game.Players.LocalPlayer.Character.Humanoid.JumpPower
-    while wait(0.1) do
-        if getgenv().speedEnabled then
-        	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = getgenv().customSpeed
-        else game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = getgenv().originalSpeed
-        end
-        
-        if getgenv().jumpEnabled and not getgenv().flightEnabled then
-        	game.Players.LocalPlayer.Character.Humanoid.JumpPower = getgenv().customJump
-        elseif not getgenv().flightEnabled then game.Players.LocalPlayer.Character.Humanoid.JumpPower = getgenv().originalJumpPower
-        end
-    end
+	getgenv().originalSpeed = game.Players.LocalPlayer.Character.Humanoid.WalkSpeed
+	getgenv().originalJumpPower = game.Players.LocalPlayer.Character.Humanoid.JumpPower
+	while wait(0.1) do
+		if getgenv().speedEnabled then
+			game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = getgenv().customSpeed
+		else game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = getgenv().originalSpeed
+		end
+		
+		if getgenv().jumpEnabled and not getgenv().flightEnabled then
+			game.Players.LocalPlayer.Character.Humanoid.JumpPower = getgenv().customJump
+		elseif not getgenv().flightEnabled then game.Players.LocalPlayer.Character.Humanoid.JumpPower = getgenv().originalJumpPower
+		end
+	end
 end)
 
 
@@ -151,8 +151,8 @@ function onJumpRequest()
 		game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
 		wait(0.05)
 		if getgenv().jumpEnabled then
-    		game.Players.LocalPlayer.Character.Humanoid.JumpPower = oldJP
-    	else game.Players.LocalPlayer.Character.Humanoid.JumpPower = getgenv().originalJumpPower end
+			game.Players.LocalPlayer.Character.Humanoid.JumpPower = oldJP
+		else game.Players.LocalPlayer.Character.Humanoid.JumpPower = getgenv().originalJumpPower end
 	end
 end
 
