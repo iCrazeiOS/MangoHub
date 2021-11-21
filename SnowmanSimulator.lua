@@ -1,5 +1,8 @@
 if not UILibrary then getgenv().UILibrary = loadstring(game:HttpGet("https://pastebin.com/raw/V1ca2q9s"))() end
-getgenv().autoCanes = false
+getgenv().autoSellCanes = false
+getgenv().autoCollectCanes = false
+getgenv().autoAddSnow = false
+getgenv().autoRebirth = false
 
 local MainUI = UILibrary.Load("Snowman Simulator Menu - by iCraze")
 local movementPage = MainUI.AddPage("Movement")
@@ -39,16 +42,60 @@ movementPage.AddButton("Teleport to player", function()
 	end
 end)
 
-local autoCanesToggle = autoPage.AddToggle("Auto Redeem Canes", false, function(Value)
-	getgenv().autoCanes = Value
+
+
+local autoAddToSnowmanToggle = autoPage.AddToggle("Auto Add To Snowball", false, function(Value)
+	getgenv().autoAddSnow = Value
 	if Value then
     	spawn(function()
             while true do
-                if not getgenv().autoCanes then break end
-                game:GetService("ReplicatedStorage").ThisGame.Calls.candycaneSell:FireServer("sellCandycanes", 0, workspace.sellSpots.goldA.Nutcracker)
+                if not getgenv().autoAddSnow then break end
+                game:GetService("ReplicatedStorage").ThisGame.Calls.snowballController:FireServer("addToSnowman")wait(1)
+                wait(1)
+            end
+    	end)
+    end
+end)
+
+local autoRebirthToggle = autoPage.AddToggle("Auto Rebirth", false, function(Value)
+	getgenv().autoRebirth = Value
+	if Value then
+    	spawn(function()
+            while true do
+                if not getgenv().autoRebirth then break end
+                game:GetService("ReplicatedStorage").ThisGame.Calls.snowmanEvent:FireServer("acceptRebirth", workspace.snowmanBases.LandPlot, true)
+                wait(1)
+            end
+    	end)
+    end
+end)
+
+local autoCanesToggle = autoPage.AddToggle("Auto Sell Canes", false, function(Value)
+	getgenv().autoSellCanes = Value
+	if Value then
+    	spawn(function()
+            while true do
+                if not getgenv().autoSellCanes then break end
                 game:GetService("ReplicatedStorage").ThisGame.Calls.candycaneSell:FireServer("sellCandycanes", 1, workspace.sellSpots.redA.Nutcracker)
                 game:GetService("ReplicatedStorage").ThisGame.Calls.candycaneSell:FireServer("sellCandycanes", 2, workspace.sellSpots.greenA.Nutcracker)
+                game:GetService("ReplicatedStorage").ThisGame.Calls.candycaneSell:FireServer("sellCandycanes", 3, workspace.sellSpots.goldA.Nutcracker)
                 wait(1)
+            end
+    	end)
+    end
+end)
+
+local getAllCanes = autoPage.AddToggle("Collect All Canes", false, function(Value)
+    getgenv().autoCollectCanes = Value
+	if Value then
+    	spawn(function()
+            while true do
+                if not getgenv().autoCollectCanes then break end
+                for i, v in pairs(game:GetService("Workspace").gameCandyCanes:GetChildren()) do
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v:GetChildren()[1].CFrame
+                    wait(0.25)
+                end
+                wait(0.1)
             end
     	end)
     end
