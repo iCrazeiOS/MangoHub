@@ -50,6 +50,10 @@ local autoAddToSnowmanToggle = autoPage.AddToggle("Auto Add To Snowman", false, 
 	if Value then
 		spawn(function()
 			while getgenv().autoAddSnow do
+			    if getgenv().autoRebirth then
+			        game:GetService("ReplicatedStorage").ThisGame.Calls.snowmanEvent:FireServer("acceptRebirth", workspace.snowmanBases.LandPlot, true)
+			        wait(0.1)
+			    end
 				game:GetService("ReplicatedStorage").ThisGame.Calls.snowballController:FireServer("addToSnowman")
 				wait(1)
 			end
@@ -104,20 +108,16 @@ local openAllPresents = autoPage.AddToggle("Open All Presents", false, function(
 		spawn(function()
 			while getgenv().autoPresents do
 				wait(0.5)
-				for i, v in pairs(game:GetService("Workspace").giftSpawns:GetChildren()) do
-					if not getgenv().autoPresents then break end
-					for i2, v2 in pairs(v:GetChildren()) do
-						if v2.Name == "hitbox" then
-							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v2.CFrame
-							wait(0.2)
-							keypress(0x45)
-							wait()
-							keyrelease(0x45)
-							wait(4)
-						end
-					end
-					wait(0.1)
-				end
+				for i, v in pairs(game:GetService("Workspace").giftSpawns:GetDescendants()) do
+                    if v:IsA("ProximityPrompt") then
+                        if not getgenv().autoPresents then break end
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Parent.WorldCFrame
+                        wait(0.2)
+                        fireproximityprompt(v, 10)
+                        v.Parent.Parent:WaitForChild("unwrapProgressBar")
+                        while v.Parent.Parent:FindFirstChild("unwrapProgressBar") do wait() end
+                    end
+                end
 			end
 		end)
 	end
