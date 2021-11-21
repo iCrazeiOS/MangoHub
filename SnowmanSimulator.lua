@@ -43,18 +43,27 @@ movementPage.AddButton("Teleport to player", function()
 	end
 end)
 
+function getLocalSnowman()
+     for i, v in pairs(game:GetService("Workspace").snowmanBases:GetChildren()) do
+        if v.player.Value == game.Players.LocalPlayer then
+            return v
+        end
+     end
+end
 
+function rebirth()
+    snowman = getLocalSnowman()
+    if snowman.rebirthActive.Value then
+        game:GetService("ReplicatedStorage").ThisGame.Calls.snowmanEvent:FireServer('acceptRebirth', snowman, true)
+    end
+end
 
 local autoAddToSnowmanToggle = autoPage.AddToggle("Auto Add To Snowman", false, function(Value)
 	getgenv().autoAddSnow = Value
 	if Value then
 		spawn(function()
 			while getgenv().autoAddSnow do
-			    if getgenv().autoRebirth then
-			        game:GetService("ReplicatedStorage").ThisGame.Calls.snowmanEvent:FireServer("acceptRebirth", workspace.snowmanBases.LandPlot, true)
-			        wait(0.1)
-			    end
-				game:GetService("ReplicatedStorage").ThisGame.Calls.snowballController:FireServer("addToSnowman")
+			    if not getLocalSnowman().rebirthActive.Value then game:GetService("ReplicatedStorage").ThisGame.Calls.snowballController:FireServer("addToSnowman") end
 				wait(1)
 			end
 		end)
@@ -66,7 +75,7 @@ local autoRebirthToggle = autoPage.AddToggle("Auto Rebirth", false, function(Val
 	if Value then
 		spawn(function()
 			while getgenv().autoRebirth do
-				game:GetService("ReplicatedStorage").ThisGame.Calls.snowmanEvent:FireServer("acceptRebirth", workspace.snowmanBases.LandPlot, true)
+				rebirth()
 				wait(1)
 			end
 		end)
@@ -114,7 +123,7 @@ local openAllPresents = autoPage.AddToggle("Open All Presents", false, function(
                         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Parent.WorldCFrame
                         wait(0.2)
                         fireproximityprompt(v, 10)
-                        v.Parent.Parent:WaitForChild("unwrapProgressBar")
+                        wait(0.1)
                         while v.Parent.Parent:FindFirstChild("unwrapProgressBar") do wait() end
                     end
                 end
