@@ -6,6 +6,7 @@ getgenv().flightEnabled = false
 getgenv().disableGlue = false
 getgenv().playerESP = false
 getgenv().coinESP = false
+getgenv().xray = false
 getgenv().customSpeed = 50
 getgenv().customJump = 50
 
@@ -126,6 +127,22 @@ local coinESPToggle = visualsPage.AddToggle("Coin ESP", false, function(Value)
 					elseif not getgenv().playerESP then v:FindFirstChild("BoxHandleAdornment"):Destroy() end
 				end
 			end
+		end
+	end)
+end)
+
+local xrayToggle = visualsPage.AddToggle("Xray", false, function(Value)
+	getgenv().xray = Value
+	spawn(function()
+		while wait(1) do
+			for i, v in pairs(game.workspace.Map.Map:GetDescendants()) do 
+				if (v:IsA("Part") or v:IsA("BasePart")) then
+					transparency = 0
+					if getgenv().xray then transparency = 0.5 end
+					v.LocalTransparencyModifier = transparency
+				end
+			end
+			if not getgenv().xray then break end
 		end
 	end)
 end)
