@@ -67,7 +67,7 @@ end)
 
 local killEveryone = gamePage.AddButton("Kill Everyone (Need to be IT)", function()
 	for i, v in pairs(game.Players:GetChildren()) do
-		if v ~= game.Players.LocalPlayer then
+		if v ~= game.Players.LocalPlayer and v.PlayerData.InGame then
 			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
 		end
 		wait(0.5)
