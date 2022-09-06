@@ -44,18 +44,18 @@ end)
 local noClipToggle = movementPage.AddToggle("Noclip", false, function(Value)
 	getgenv().noclipEnabled = Value
 	if getgenv().noclipEnabled then
-	    local function removeCollisions()
-	    	if getgenv().noclipEnabled and game.Players.LocalPlayer.Character ~= nil then
-                for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-                    -- don't change if Part already has no collision
-				    if v:IsA("BasePart") and v.CanCollide then v.CanCollide = false end
-                end
-	    	end
-    	end
-    	getgenv().noclipEvent = game:GetService("RunService").Stepped:Connect(removeCollisions)
-    elseif getgenv().noclipEvent then
-        getgenv().noclipEvent:Disconnect()
-    end
+		local function removeCollisions()
+			if getgenv().noclipEnabled and game.Players.LocalPlayer.Character ~= nil then
+				for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+					-- don't change if Part already has no collision
+					if v:IsA("BasePart") and v.CanCollide then v.CanCollide = false end
+				end
+			end
+		end
+		getgenv().noclipEvent = game:GetService("RunService").Stepped:Connect(removeCollisions)
+	elseif getgenv().noclipEvent then
+		getgenv().noclipEvent:Disconnect()
+	end
 end)
 
 local teleportMenu = movementPage.AddButton("Teleport to player", function()
@@ -116,7 +116,7 @@ local spectateMenu = gamePage.AddButton("Spectate player", function()
 		game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character.Humanoid
 	end)
 	for i, v in pairs(game.Players:GetChildren()) do
-	    local title = v.Name
+		local title = v.Name
 		if v.PlayerData.It.Value then title = title.." (IT)" end
 		if v ~= game.Players.LocalPlayer and v.PlayerData.InGame.Value then
 			playersPage.AddButton(title, function()
