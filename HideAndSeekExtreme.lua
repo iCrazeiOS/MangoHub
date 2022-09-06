@@ -3,6 +3,8 @@ getgenv().speedEnabled = false
 getgenv().jumpEnabled = false
 getgenv().noRagdollEnabled = false
 getgenv().flightEnabled = false
+getgenv().noclipEnabled = false
+getgenv().noclipEvent = nil
 getgenv().disableGlue = false
 getgenv().playerESP = false
 getgenv().coinESP = false
@@ -37,6 +39,23 @@ end)
 
 local flightToggle = movementPage.AddToggle("Flight", false, function(Value)
 	getgenv().flightEnabled = Value
+end)
+
+local noClipToggle = movementPage.AddToggle("Noclip", false, function(Value)
+	getgenv().noclipEnabled = Value
+	if getgenv().noclipEnabled then
+	    local function removeCollisions()
+	    	if getgenv().noclipEnabled and game.Players.LocalPlayer.Character ~= nil then
+                for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                    -- don't change if Part already has no collision
+				    if v:IsA("BasePart") and v.CanCollide then v.CanCollide = false end
+                end
+	    	end
+    	end
+    	getgenv().noclipEvent = game:GetService("RunService").Stepped:Connect(removeCollisions)
+    elseif getgenv().noclipEvent then
+        getgenv().noclipEvent:Disconnect()
+    end
 end)
 
 local teleportMenu = movementPage.AddButton("Teleport to player", function()
@@ -74,8 +93,37 @@ local killEveryone = gamePage.AddButton("Kill Everyone (Need to be IT)", functio
 	end
 end)
 
+local semiRevive = gamePage.AddButton("Fake Respawn", function()
+	game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character.Humanoid
+	game.Players.LocalPlayer.PlayerGui.MainGui.ItCamFrame.TopFrame.Visible = false
+	game.Players.LocalPlayer.PlayerGui.MainGui.SpectatingFrame.TopFrame.Visible = false
+	game.Players.LocalPlayer.PlayerGui.MainGui.SpectatingFrame.BottomFrame.Visible = false
+	game.Players.LocalPlayer.PlayerGui.MainGui.SpectatingFrame.Q.Visible = false
+	game.Players.LocalPlayer.PlayerGui.MainGui.SpectatingFrame.E.Visible = false
+	
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace").Map.ItSpawn.Position + Vector3.new(0, 5, 0))
+	game.Players.LocalPlayer.PlayerData.InGame.Value = true
+end)
+
 local disableGlueToggle = gamePage.AddToggle("Disable Glue/Cameras", false, function(Value)
 	getgenv().disableGlue = Value
+end)
+
+local spectateMenu = gamePage.AddButton("Spectate player", function()
+	local teleportUI = UILibrary.Load("Spectate player")
+	local playersPage = teleportUI.AddPage("Players")
+	playersPage.AddButton("STOP SPECTATING", function()
+		game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character.Humanoid
+	end)
+	for i, v in pairs(game.Players:GetChildren()) do
+	    local title = v.Name
+		if v.PlayerData.It.Value then title = title.." (IT)" end
+		if v ~= game.Players.LocalPlayer and v.PlayerData.InGame.Value then
+			playersPage.AddButton(title, function()
+				game.Workspace.Camera.CameraSubject = v.Character.Humanoid
+			end)
+		end
+	end
 end)
 
 local playerESPToggle = visualsPage.AddToggle("Player ESP", false, function(Value)
@@ -165,7 +213,7 @@ game:GetService("UserInputService").JumpRequest:connect(onJumpRequest)
 while wait(1) do
 	if getgenv().disableGlue then
 		for i, v in pairs(game.Workspace.GameObjects:GetChildren()) do
-			if v.name == "GlueServer" or v.name == "Camera1" or v.name == "Camera2" or v.name == "CameraServer" then
+			if v.name == "GlueServer" or v.name == "Glue"  or v.name == "GluePlaced" or v.name == "Camera1" or v.name == "Camera2" or v.name == "CameraServer" then
 				v:Destroy()
 			end
 		end
