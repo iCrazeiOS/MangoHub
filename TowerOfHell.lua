@@ -10,7 +10,7 @@ getgenv().flightEnabled = false
 
 function showToast(message)
     StarterGui:SetCore("SendNotification", {
-    	Title = "HangoHub",
+    	Title = "MangoHub",
     	Text = message,
     	Duration = 2
     })
