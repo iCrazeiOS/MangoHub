@@ -1,6 +1,8 @@
 if not UILibrary then getgenv().UILibrary = loadstring(game:HttpGet("https://pastebin.com/raw/V1ca2q9s"))() end
+if not oldGravity then getgenv().oldGravity = workspace.Gravity end
 getgenv().speedEnabled = false
 getgenv().jumpEnabled = false
+getgenv().gravityEnabled = false
 getgenv().noRagdollEnabled = false
 getgenv().flightEnabled = false
 getgenv().noclipEnabled = false
@@ -11,6 +13,7 @@ getgenv().coinESP = false
 getgenv().xray = false
 getgenv().customSpeed = 50
 getgenv().customJump = 50
+getgenv().customGravity = workspace.Gravity
 
 local MainUI = UILibrary.Load("Hide and Seek Extreme Menu - by iCraze")
 local movementPage = MainUI.AddPage("Movement")
@@ -31,6 +34,26 @@ end)
 
 local customJumpSlider = movementPage.AddSlider("Jump Power", {Min = 0, Max = 255, Def = 50}, function(Value)
 	getgenv().customJump = Value
+end)
+
+local customGravityToggle = movementPage.AddToggle("Enable Custom Gravity", false, function(Value)
+	getgenv().gravityEnabled = Value
+
+	if Value then
+		workspace.Gravity = getgenv().customGravity
+	else
+		workspace.Gravity = getgenv().oldGravity
+	end
+end)
+
+local customGravitySlider = movementPage.AddSlider("Custom Gravity", {Min = 0, Max = 1000, Def = getgenv().oldGravity}, function(Value)
+	getgenv().customGravity = Value
+
+	if getgenv().gravityEnabled then
+		workspace.Gravity = getgenv().customGravity
+	else
+		workspace.Gravity = getgenv().oldGravity
+	end
 end)
 
 local noRagdollToggle = movementPage.AddToggle("No Ragdoll", false, function(Value)
