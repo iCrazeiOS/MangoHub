@@ -1,16 +1,18 @@
 if not UILibrary then getgenv().UILibrary = loadstring(game:HttpGet("https://pastebin.com/raw/V1ca2q9s"))() end
 local StarterGui = game:GetService("StarterGui")
+local UIS = game:GetService("UserInputService")
 getgenv().speedEnabled = false
 getgenv().jumpEnabled = false
 getgenv().godModeEnabled = false
 getgenv().customSpeed = 50
 getgenv().customJump = 50
 getgenv().flightEnabled = false
+getgenv().gravity = 196.1999969482422 -- default gravity value
 
 
 function showToast(message)
     StarterGui:SetCore("SendNotification", {
-    	Title = "MangoHub",
+    	Title = "HangoHub",
     	Text = message,
     	Duration = 2
     })
@@ -28,14 +30,16 @@ mt.__namecall = newcclosure(function(self, ...)
 	return old(self, ...)
 end)
 setreadonly(mt, true)
-game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript2:Destroy()
-game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript:Destroy()
+if game:GetService("Players").LocalPlayer.PlayerScripts:FindFirstChild("LocalScript2") then
+    game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript2:Destroy()
+    game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript:Destroy()
+end
 -- another one ????
 local reg = getreg()
 for i, Function in next, reg do
-    if type(Function) == 'function' then
+    if type(Function) == "function" then
         local info = getinfo(Function)
-        if info.name == 'kick' then
+        if info.name == "kick" then
             if (hookfunction(info.func, function(...)end)) then
                 print "lol no kick"
             end
@@ -76,12 +80,6 @@ end)
 
 local godModeToggle = gamePage.AddToggle("Godmode", false, function(Value)
 	getgenv().godModeEnabled = Value
-	spawn(function()
-		while wait do
-			if not getgenv().godModeEnabled then break end
-			game.Players.LocalPlayer.Character.KillScript:Destroy() 
-		end
-	end)
 end)
 
 local removeKillZonesButton = gamePage.AddButton("Delete kill zones", function()
@@ -92,8 +90,15 @@ local removeKillZonesButton = gamePage.AddButton("Delete kill zones", function()
 end)
 
 local freezeTimeToggle = gamePage.AddToggle("Freeze Time", game.Players.LocalPlayer.PlayerScripts.timefreeze.Value, function(Value)
-    print(game:GetService("Players").LocalPlayer.PlayerScripts:GetChildren())
 	game.Players.LocalPlayer.PlayerScripts.timefreeze.Value = Value
+end)
+
+local gravitySlider = gamePage.AddSlider("Custom Gravity (Default 196)", {Min = 25, Max = 300, Def = 196}, function(Value)
+    getgenv().gravity = Value
+end)
+
+local gravityToggle = gamePage.AddButton("Set Gravity", function()
+    game.Workspace.Gravity = getgenv().gravity
 end)
 
 local teleportTool = movementPage.AddButton("Receive teleporter", function()
@@ -162,6 +167,42 @@ end
 
 game:GetService("UserInputService").JumpRequest:connect(onJumpRequest)
 
+UIS.InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.C then
+        local newValue = not game.Players.LocalPlayer.PlayerScripts.timefreeze.Value
+        game.Players.LocalPlayer.PlayerScripts.timefreeze.Value = newValue
+        -- freezeTimeToggle.Value = newValue
+        showToast("Toggled time freeze")
+    end
+end)
+
+spawn(function()
+	while wait(0.1) do
+		for i,v in pairs(workspace[game.Players.LocalPlayer.Name]:GetChildren()) do
+			if getgenv().godModeEnabled then
+				if v.Name == "hitbox" then
+					v.Name = "hitboxInvincible"
+				end
+			else
+				if v.Name == "hitboxInvincible" then
+					v.Name = "hitbox"
+				end
+			end
+		end
+	end
+end)
+
+workspace[game.Players.LocalPlayer.Name].ChildAdded:Connect(function(v)
+	if getgenv().godModeEnabled then
+		if v.Name == "hitbox" then
+			v.Name = "hitboxInvincible"
+		end
+	else
+		if v.Name == "hitboxInvincible" then
+			v.Name = "hitbox"
+		end
+	end
+end)
 
 while wait(1) do
 	if getgenv().speedEnabled then
