@@ -87,11 +87,11 @@ local teleportMenu = movementPage.AddButton("Teleport to player", function()
 	for i, v in pairs(game.Players:GetChildren()) do
 		if v.PlayerData.It.Value then
 			playersPage.AddButton(v.Name.." (IT)", function()
-				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+				game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.Character:WaitForChild("HumanoidRootPart").CFrame
 			end)
 		elseif v ~= game.Players.LocalPlayer then
 			playersPage.AddButton(v.Name, function()
-				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+				game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.Character:WaitForChild("HumanoidRootPart").CFrame
 			end)
 		end
 	end
@@ -102,7 +102,7 @@ end)
 local getAllCoins = gamePage.AddButton("Collect All Coins", function()
 	for i, v in pairs(game.Workspace.GameObjects:GetChildren()) do
 		if v.name == "Credit" then
-			firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v, 0)
+			firetouchinterest(game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart"), v, 0)
 		end
 	end
 end)
@@ -110,21 +110,21 @@ end)
 local killEveryone = gamePage.AddButton("Kill Everyone (Need to be IT)", function()
 	for i, v in pairs(game.Players:GetChildren()) do
 		if v ~= game.Players.LocalPlayer and v.PlayerData.InGame then
-			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+			game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = v.Character:WaitForChild("HumanoidRootPart").CFrame
 		end
 		wait(0.5)
 	end
 end)
 
 local semiRevive = gamePage.AddButton("Fake Respawn", function()
-	game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character.Humanoid
+	game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
 	game.Players.LocalPlayer.PlayerGui.MainGui.ItCamFrame.TopFrame.Visible = false
 	game.Players.LocalPlayer.PlayerGui.MainGui.SpectatingFrame.TopFrame.Visible = false
 	game.Players.LocalPlayer.PlayerGui.MainGui.SpectatingFrame.BottomFrame.Visible = false
 	game.Players.LocalPlayer.PlayerGui.MainGui.SpectatingFrame.Q.Visible = false
 	game.Players.LocalPlayer.PlayerGui.MainGui.SpectatingFrame.E.Visible = false
 	
-	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace").Map.ItSpawn.Position + Vector3.new(0, 5, 0))
+	game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(game:GetService("Workspace").Map.ItSpawn.Position + Vector3.new(0, 5, 0))
 	game.Players.LocalPlayer.PlayerData.InGame.Value = true
 end)
 
@@ -136,14 +136,14 @@ local spectateMenu = gamePage.AddButton("Spectate player", function()
 	local teleportUI = UILibrary.Load("Spectate player")
 	local playersPage = teleportUI.AddPage("Players")
 	playersPage.AddButton("STOP SPECTATING", function()
-		game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character.Humanoid
+		game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
 	end)
 	for i, v in pairs(game.Players:GetChildren()) do
 		local title = v.Name
 		if v.PlayerData.It.Value then title = title.." (IT)" end
 		if v ~= game.Players.LocalPlayer and v.PlayerData.InGame.Value then
 			playersPage.AddButton(title, function()
-				game.Workspace.Camera.CameraSubject = v.Character.Humanoid
+				game.Workspace.Camera.CameraSubject = v.Character:WaitForChild("Humanoid")
 			end)
 		end
 	end
@@ -220,12 +220,12 @@ end)
 
 function onJumpRequest()
 	if getgenv().flightEnabled then
-		local oldJP = game.Players.LocalPlayer.Character.Humanoid.JumpPower
-		game.Players.LocalPlayer.Character.Humanoid.JumpPower = 30
+		local oldJP = game.Players.LocalPlayer.Character:WaitForChild("Humanoid").JumpPower
+		game.Players.LocalPlayer.Character:WaitForChild("Humanoid").JumpPower = 30
 		wait(0.05)
 		game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
 		wait(0.05)
-		game.Players.LocalPlayer.Character.Humanoid.JumpPower = oldJP
+		game.Players.LocalPlayer.Character:WaitForChild("Humanoid").JumpPower = oldJP
 	end
 end
 
@@ -243,20 +243,20 @@ while wait(1) do
 	end
 
 	if getgenv().speedEnabled then
-		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = getgenv().customSpeed
-	else game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+		game.Players.LocalPlayer.Character:WaitForChild("Humanoid").WalkSpeed = getgenv().customSpeed
+	else game.Players.LocalPlayer.Character:WaitForChild("Humanoid").WalkSpeed = 16
 	end
 
 	if getgenv().jumpEnabled and not getgenv().flightEnabled then
-		game.Players.LocalPlayer.Character.Humanoid.JumpPower = getgenv().customJump
-	elseif not getgenv().flightEnabled then game.Players.LocalPlayer.Character.Humanoid.JumpPower = 57
+		game.Players.LocalPlayer.Character:WaitForChild("Humanoid").JumpPower = getgenv().customJump
+	elseif not getgenv().flightEnabled then game.Players.LocalPlayer.Character:WaitForChild("Humanoid").JumpPower = 57
 	end
 
 	if getgenv().noRagdollEnabled then
-		game.Players.LocalPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
-		game.Players.LocalPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+		game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
+		game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
 	else
-		game.Players.LocalPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, true)
-		game.Players.LocalPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, true)
+		game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):SetStateEnabled(Enum.HumanoidStateType.Ragdoll, true)
+		game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):SetStateEnabled(Enum.HumanoidStateType.FallingDown, true)
 	end
 end
